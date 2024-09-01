@@ -1,0 +1,777 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#pragma warning (disable : 4996)
+
+
+//``variables for calculating GPA``
+
+char grade11[20], grade12[20], grade21[20], grade22[20], grade31[20], grade32[20];
+
+//``variables used to display student's course code``
+
+char courseCode11[30], courseCode12[30], courseCode21[30], courseCode22[30], courseCode31[30], courseCode32[30];
+
+//``variable used to store the student ID``
+
+char  studentID[30];
+
+//``variables used for storing student's name``
+
+char firstName[30], lastName[30];
+
+//``variables used to generate the time for each course code and timetable purposes``
+
+char time11[20], time12[20], time21[20], time22[20], time31[20], time32[20];
+
+//``variables used to generate the day for each course code and timetable purposes``
+
+char day11[20], day12[20], day21[20], day22[20], day31[20], day32[20];
+
+//``variables used to generate the location for each course code and timetable purposes``
+
+char location11[20], location12[20], location21[20], location22[20], location31[20], location32[20];
+
+//``variables used towards calculating student's GPA and CGPA``
+
+int creditHours11, creditHours12, creditHours21, creditHours22, creditHours31, creditHours32;
+
+//``variable used for the gradepoint in calculating the student's GPA and CGPA``
+double gradePoint;
+
+//``variables used for the grade obtained when keying in the student's result``
+
+double grade11get, grade12get, grade21get, grade22get, grade31get, grade32get;
+
+//``variables used to display the results after calculating the student's GPA and CGPA throughout their entire semester``
+
+double gpa1, gpa2, gpa3, cgpa, cgpa1, cgpa2, cgpa3;
+
+
+//``the main page where selections are made and the intro is displayed``
+
+void main()
+{
+	char id[50];
+	int mode = 0;
+	char password[50];
+
+
+	//``intro``
+	system("color F0");
+	printf("====================================================================================\n");
+	printf("||   ||  ||||||  ||      |||||||      ||     ||||||   |||||  |||||||  |||||  ||||||  \n");
+	printf("||  ||  ||    || ||      ||           ||     ||   || ||   || ||      ||   || ||   || \n");
+	printf("|||||   ||    || ||      |||||        ||     ||||||  ||||||| ||||||| ||||||| ||||||  \n");
+	printf("||  ||  ||    || ||      ||      ||   ||     ||      ||   ||      || ||   || ||   || \n");
+	printf("||   ||  ||||||  ||||||| |||||||  |||||      ||      ||   || ||||||| ||   || ||   || \n");
+	printf("====================================================================================\n");
+	printf("Hello! Welcome to the Kolej Pasar staff and student database.\nAre you a:\n=======================\n(1) Staff administrator\n=======================\nor\n=======================\n(2) Student\n=======================\nPlease press 3 to exit.\n=======================\n > ");
+	scanf("%d", &mode);
+
+	//``switch case and if else used to read the selection and generate respective functions out of it``
+
+	switch (mode) {
+	case 1:
+
+	User:
+
+		printf("=======================\n");
+		printf("Enter your id > \n");
+		scanf("%s", &id);
+
+		if (strcmp(id, "KOLEJPASARADMIN") == 0) {
+			printf("=======================\n");
+			printf("Your ID is correct!\n");
+			printf("=======================\n");
+		}
+
+		else {
+			printf("=======================\n");
+			printf("Sorry, your ID is invalid!!\nPlease enter your ID again.\n");
+			printf("=======================\n");
+			system("pause");
+			system("cls");
+			goto User;
+		}
+
+	pass:
+
+		printf("Enter your password > \n");
+		printf("=======================\n");
+		scanf("%s", &password);
+
+		if (strcmp(password, "KOLEJPASARADMIN123") == 0) {
+			printf("Welcome, staff administrator. You have been successfully logged into the student database.\n");
+			system("pause");
+			system("cls");
+			staffAdministrator();
+		}
+		else {
+			printf("Invalid password. Please try again.\n");
+			system("pause");
+			system("cls");
+			goto pass;
+		}
+		break;
+
+	case 2:
+		system("pause");
+		system("cls");
+		printf("Welcome student!\n");
+		studentInterface(studentID);
+		break;
+
+	case 3:
+		return 0;
+
+	default:
+		printf("Invalid selection. The number you've entered doesn't adhere to any of the selection listed. Please try again.\n");
+		system("pause");
+		system("cls");
+		main();
+		break;
+	}
+
+	system("pause");
+}
+
+int staffAdministrator() {
+
+	//``this is the staff's page where the staff can key in and generate and view student's result.``
+
+	int mode2;
+
+	system("cls");
+	printf("=============================================================================================================\n");
+	printf("Welcome staff administrator of Kolej Pasar! What do you want to do?\n");
+	printf("=============================================================================================================\n");
+	printf("1) Enter student's detail\n2) Generate student's result\n3) Generate student's timetable \n4) Logout\n5) Exit\n");
+	scanf("%d", &mode2);
+
+	//``switch case used to display function according to the staff's selection``
+
+	switch (mode2) {
+	case 1:
+		addStudent(studentID);
+		break;
+	case 2:
+		system("cls");
+		courseDetail();
+		break;
+	case 3:
+		system("cls");
+		genTimeTable();
+		break;
+	case 4:
+		system("cls");
+		main();
+		break;
+	default:
+		break;
+	}
+}
+
+int addStudent(char* studentID) {
+
+	//``this is where staffs are able to add student's information 
+
+	system("cls");
+	printf("================================================\n");
+	printf("Enter the student's first name. > \n");
+	scanf("%s", firstName);
+	printf("================================================\n");
+	printf("Enter the student's last name. >\n");
+	scanf("%s", lastName);
+	printf("================================================\n");
+	printf("Enter student's student ID. (eg : KPKL	12345) >\n");
+	scanf("%s", studentID);
+	printf("================================================\n");
+	rewind(stdin);
+	printf("Student record stored!\n");
+	printf("================================================\n");
+	system("pause");
+	system("cls");
+	staffAdministrator();
+}
+
+int courseDetail() {
+
+	//``now this is where all the magic happens, the GPA and CGPA calculator.``
+	system("cls");
+
+	printf("=================================\n");
+	printf("Enter student's semester 1 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode11);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours11);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf(" %s", &grade11);
+	rewind(stdin);
+
+
+	if (strcmp(grade11, "A") == 0) {
+		grade11get = 4.00;
+	}
+	else if (strcmp(grade11, "A-") == 0) {
+		grade11get = 3.75;
+	}
+	else if (strcmp(grade11, "B+") == 0) {
+		grade11get = 3.50;
+	}
+	else if (strcmp(grade11, "B") == 0) {
+		grade11get = 3.00;
+	}
+	else if (strcmp(grade11, "B-") == 0) {
+		grade11get = 2.75;
+	}
+	else if (strcmp(grade11, "C+") == 0) {
+		grade11get = 2.50;
+	}
+	else if (strcmp(grade11, "C") == 0) {
+		grade11get = 2.00;
+	}
+	else if (strcmp(grade11, "F") == 0) {
+		grade11get = 0.00;
+	}
+	else {
+		printf("Invalid Input.\n");
+		printf("Please reenter student's data.\n");
+		system("pause");
+		system("cls");
+		courseDetail();
+	}
+
+	float qualitypoint11 = grade11get * creditHours11;
+
+	printf("=================================\n");
+	printf("Enter student's semester 1 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode12);
+	rewind(stdin);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours12);
+	rewind(stdin);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf(" %s", &grade12);
+	rewind(stdin);
+
+
+	if (strcmp(grade12, "A") == 0) {
+		grade12get = 4.00;
+	}
+	else if (strcmp(grade12, "A-") == 0) {
+		grade12get = 3.75;
+	}
+	else if (strcmp(grade12, "B+") == 0) {
+		grade12get = 3.50;
+	}
+	else if (strcmp(grade12, "B") == 0) {
+		grade12get = 3.00;
+	}
+	else if (strcmp(grade12, "B-") == 0) {
+		grade12get = 2.75;
+	}
+	else if (strcmp(grade12, "C+") == 0) {
+		grade12get = 2.50;
+	}
+	else if (strcmp(grade12, "C") == 0) {
+		grade12get = 2.00;
+	}
+	else if (strcmp(grade12, "F") == 0) {
+		grade12get = 0.00;
+	}
+	else {
+		printf("Invalid Input.\n");
+		printf("Please reenter student's data.\n");
+		system("pause");
+		system("cls");
+		courseDetail();
+	}
+
+	float qualitypoint12 = grade12get * creditHours12;
+
+	//total
+	gpa1 = (qualitypoint11 + qualitypoint12) / (creditHours11 + creditHours12);
+
+	printf("=================================\n");
+	printf("Enter student's semester 2 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode21);
+	rewind(stdin);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours21);
+	rewind(stdin);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf("%s", &grade21);
+	rewind(stdin);
+
+
+	if (strcmp(grade21, "A") == 0) {
+		grade21get = 4.00;
+	}
+	else if (strcmp(grade21, "A-") == 0) {
+		grade21get = 3.75;
+	}
+	else if (strcmp(grade21, "B+") == 0) {
+		grade21get = 3.50;
+	}
+	else if (strcmp(grade21, "B") == 0) {
+		grade21get = 3.00;
+	}
+	else if (strcmp(grade21, "B-") == 0) {
+		grade21get = 2.75;
+	}
+	else if (strcmp(grade21, "C+") == 0) {
+		grade21get = 2.50;
+	}
+	else if (strcmp(grade21, "C") == 0) {
+		grade21get = 2.00;
+	}
+	else if (strcmp(grade21, "F") == 0) {
+		grade21get = 0.00;
+	}
+	else {
+		printf("Invalid Input.");
+	}
+
+	float qualitypoint21 = grade21get * creditHours21;
+
+	printf("=================================\n");
+	printf("Enter student's semester 2 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode22);
+	rewind(stdin);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours22);
+	rewind(stdin);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf(" %s", &grade22);
+	rewind(stdin);
+
+
+	if (strcmp(grade22, "A") == 0) {
+		grade22get = 4.00;
+	}
+	else if (strcmp(grade22, "A-") == 0) {
+		grade22get = 3.75;
+	}
+	else if (strcmp(grade22, "B+") == 0) {
+		grade22get = 3.50;
+	}
+	else if (strcmp(grade22, "B") == 0) {
+		grade22get = 3.00;
+	}
+	else if (strcmp(grade22, "B-") == 0) {
+		grade22get = 2.75;
+	}
+	else if (strcmp(grade22, "C+") == 0) {
+		grade22get = 2.50;
+	}
+	else if (strcmp(grade22, "C") == 0) {
+		grade22get = 2.00;
+	}
+	else if (strcmp(grade22, "F") == 0) {
+		grade22get = 0.00;
+	}
+	else {
+		printf("Invalid Input.\n");
+		printf("Please reenter student's data.\n");
+		system("pause");
+		system("cls");
+		courseDetail();
+	}
+
+	float qualitypoint22 = grade22get * creditHours22;
+
+	//total
+	gpa2 = (qualitypoint21 + qualitypoint22) / (creditHours21 + creditHours22);
+
+	printf("=================================\n");
+	printf("Enter student's semester 3 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode31);
+	rewind(stdin);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours31);
+	rewind(stdin);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf("%s", &grade31);
+	rewind(stdin);
+
+
+	if (strcmp(grade31, "A") == 0) {
+		grade31get = 4.00;
+	}
+	else if (strcmp(grade31, "A-") == 0) {
+		grade31get = 3.75;
+	}
+	else if (strcmp(grade31, "B+") == 0) {
+		grade31get = 3.50;
+	}
+	else if (strcmp(grade31, "B") == 0) {
+		grade31get = 3.00;
+	}
+	else if (strcmp(grade31, "B-") == 0) {
+		grade31get = 2.75;
+	}
+	else if (strcmp(grade31, "C+") == 0) {
+		grade31get = 2.50;
+	}
+	else if (strcmp(grade31, "C") == 0) {
+		grade31get = 2.00;
+	}
+	else if (strcmp(grade31, "F") == 0) {
+		grade31get = 0.00;
+	}
+	else {
+		printf("Invalid Input.\n");
+		printf("Please reenter student's data.\n");
+		system("pause");
+		system("cls");
+		courseDetail();
+	}
+
+	float qualitypoint31 = grade31get * creditHours31;
+
+	printf("=================================\n");
+	printf("Enter student's semester 3 result\n");
+	printf("=================================\n");
+
+	printf("Enter student's course code. > \n");
+	scanf("%s", &courseCode32);
+	rewind(stdin);
+
+	printf("Enter student's credit hours. > \n");
+	scanf("%d", &creditHours32);
+	rewind(stdin);
+
+	printf("Enter student's grade obtained for this course. > \n");
+	scanf(" %s", &grade32);
+	rewind(stdin);
+
+
+	if (strcmp(grade32, "A") == 0) {
+		grade32get = 4.00;
+	}
+	else if (strcmp(grade32, "A-") == 0) {
+		grade32get = 3.75;
+	}
+	else if (strcmp(grade32, "B+") == 0) {
+		grade32get = 3.50;
+	}
+	else if (strcmp(grade32, "B") == 0) {
+		grade32get = 3.00;
+	}
+	else if (strcmp(grade32, "B-") == 0) {
+		grade32get = 2.75;
+	}
+	else if (strcmp(grade32, "C+") == 0) {
+		grade32get = 2.50;
+	}
+	else if (strcmp(grade32, "C") == 0) {
+		grade32get = 2.00;
+	}
+	else if (strcmp(grade32, "F") == 0) {
+		grade32get = 0.00;
+	}
+	else {
+		printf("Invalid Input.\n");
+		printf("Please reenter student's data.\n");
+		system("pause");
+		system("cls");
+		courseDetail();
+	}
+
+	float qualitypoint32 = grade32get * creditHours32;
+
+	//``final result after calculating the student's gpa for sem 3, cgpa from all the sem and cgpa for each sem.``
+
+	gpa3 = (qualitypoint31 + qualitypoint32) / (creditHours31 + creditHours32);
+	cgpa = (qualitypoint11 + qualitypoint12 + qualitypoint21 + qualitypoint22 + qualitypoint31 + qualitypoint32) / (creditHours11 + creditHours12 + creditHours21 + creditHours22 + creditHours31 + creditHours32);
+	cgpa1 = (qualitypoint11 + qualitypoint12) / (creditHours11 + creditHours12);
+	cgpa2 = (qualitypoint11 + qualitypoint12 + qualitypoint21 + qualitypoint22) / (creditHours11 + creditHours12 + creditHours21 + creditHours22);
+
+
+	//``this is finally displaying it :D``
+
+	printf("GPA for Sem 1 %.2f \n", gpa1);
+	printf("CGPA for Sem 1 %.2f \n", cgpa1);
+	printf("GPA for Sem 2 %.2f \n", gpa2);
+	printf("CGPA for Sem 2 %.2f \n", cgpa2);
+	printf("GPA for Sem 3 %.2f \n", gpa3);
+	printf("CGPA for Sem 3 %.2f \n", cgpa);
+	printf("CGPA overall %.2f \n", cgpa);
+
+	system("pause");
+	system("cls");
+
+
+	staffAdministrator();
+}
+
+int studentInterface(char* studentID) {
+
+	//``this is where students are able to login using the ID registered by the staff administrator in the function int addStudent above!``
+
+	char iD[10];
+
+Student:
+
+
+	printf("=======================================================\n");
+	printf("Please enter your student ID to proceed. > \n");
+	printf("=======================================================\n");
+	scanf("%s", &iD);
+
+	if (strcmp(studentID, iD) == 0)
+	{
+		printf("=======================================================\n");
+		printf("Welcome, student. You have been successfully logged in.\n");
+		printf("=======================================================\n");
+		system("pause");
+		system("cls");
+
+		int choice;
+		do {
+			printf("=======================================================\n");
+			printf("What do you want to do, %s %s?\n", firstName, lastName);
+			printf("=======================================================\n");
+			printf("1) Check your results\n");
+			printf("2) Timetable\n");
+			printf("3) Logout\n");
+			printf("4) Exit\n");
+			printf("Enter your choice: ");
+			scanf("%d", &choice);
+
+			//``switch casees are also used here to display the output based on student's selection``
+
+			switch (choice) {
+			case 1:
+				system("cls");
+				printf("===================\n");
+				printf("GPA for Sem 1: %.2f\n", gpa1);
+				printf("===================\n");
+				printf("GPA for Sem 2: %.2f\n", gpa2);
+				printf("===================\n");
+				printf("GPA for Sem 3: %.2f\n", gpa3);
+				printf("===================\n");
+				printf("CGPA: %.2f\n", cgpa);
+				printf("===================\n");
+				system("pause");
+				system("cls");
+				break;
+			case 2:
+				displayTimetable();
+				break;
+			case 3:
+				system("cls");
+				main();
+				break;
+			case 4:
+				exit(0);
+				break;
+			default:
+				printf("Invalid choice. Please try again.\n");
+			}
+		} while (choice != 3);
+	}
+	else
+	{
+		printf("Invalid student ID entered/No student record. Please enter your student ID again.");
+		system("pause");
+		system("cls");
+		goto Student;
+	}
+}
+
+int genTimeTable() {
+
+	//``this is also where the fun part of generating a student's timetable happen yay``
+
+		//course 1 sem 1
+	system("cls");
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 1 > \n", courseCode11);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day11);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time11);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location11);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode11);
+
+	system("pause");
+	system("cls");
+
+	//course 2 sem 1
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 1 > \n", courseCode12);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day12);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time12);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location12);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode12);
+
+	system("pause");
+	system("cls");
+
+	//course 1 sem 2
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 2 > \n", courseCode21);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day21);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time21);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location21);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode21);
+
+	system("pause");
+	system("cls");
+
+	//course 2 sem 2
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 2 > \n", courseCode22);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day22);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time22);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location22);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode22);
+
+	system("pause");
+	system("cls");
+
+	//course 1 sem 3
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 3 > \n", courseCode31);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day31);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time31);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location31);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode31);
+
+	system("pause");
+	system("cls");
+
+	//course 2 sem 3
+	printf("==============================================\n");
+	printf("Enter schedule for course code %s semester 3 > \n", courseCode32);
+	printf("==============================================\n");
+	printf("Enter day > \n");
+	scanf("%s", day32);
+	printf("==============================================\n");
+	printf("Enter time > \n");
+	scanf("%s", time32);
+	printf("==============================================\n");
+	printf("Enter location > \n");
+	scanf("%s", location32);
+	printf("==============================================\n");
+	printf("Schedule for course code %s has been added to the timetable.\n", courseCode32);
+
+	system("pause");
+	system("cls");
+
+	printf("Student's timetable has been successfully recorded!\n");
+	system("pause");
+	system("cls");
+
+	staffAdministrator();
+
+}
+
+int displayTimetable() {
+
+	//``now this is where students can finally view the timetable generated by the staff, hurrah!``
+
+	system("cls");
+	printf("================================================================================================================================================\n");
+	printf("||||||| |||||||| ||    || ||||||  ||||||| |||    || |||||||| |||||||     |||||||| || |||    ||| ||||||| ||||||||  |||||  ||||||  ||      ||||||| \n");
+	printf("||         ||    ||    || ||   || ||      ||||   ||    ||    ||             ||    || ||||  |||| ||         ||    ||   || ||   || ||      ||      \n");
+	printf("|||||||    ||    ||    || ||   || |||||   || ||  ||    ||    |||||||        ||    || || |||| || |||||      ||    ||||||| ||||||  ||      |||||   \n");
+	printf("     ||    ||    ||    || ||   || ||      ||  || ||    ||         ||        ||    || ||  ||  || ||         ||    ||   || ||   || ||      ||      \n");
+	printf("|||||||    ||     ||||||  ||||||  ||||||| ||   ||||    ||    |||||||        ||    || ||      || |||||||    ||    ||   || ||||||  ||||||| ||||||| \n");
+	printf("================================================================================================================================================\n");
+	printf("Semester 1\n");
+	printf("%s\n", courseCode11);
+	printf("%s\n", day11);
+	printf("%s\n", location11);
+	printf("%s\n", time11);
+	printf("================================================================================================================================================\n");
+	printf("%s\n", courseCode12);
+	printf("%s\n", day12);
+	printf("%s\n", location12);
+	printf("%s\n", time12);
+	printf("================================================================================================================================================\n");
+	printf("Semester 2\n");
+	printf("%s\n", courseCode21);
+	printf("%s\n", day21);
+	printf("%s\n", location21);
+	printf("%s\n", time21);
+	printf("================================================================================================================================================\n");
+	printf("%s\n", courseCode22);
+	printf("%s\n", day22);
+	printf("%s\n", location22);
+	printf("%s\n", time22);
+	printf("================================================================================================================================================\n");
+	printf("Semester 3\n");
+	printf("%s\n", courseCode31);
+	printf("%s\n", day31);
+	printf("%s\n", location31);
+	printf("%s\n", time31);
+	printf("================================================================================================================================================\n");
+	printf("%s\n", courseCode32);
+	printf("%s\n", day32);
+	printf("%s\n", location32);
+	printf("%s\n", time32);
+	printf("================================================================================================================================================\n");
+	system("pause");
+	system("cls");
+}
